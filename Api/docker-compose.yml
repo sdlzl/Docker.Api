@@ -1,0 +1,23 @@
+﻿version: "3"
+services:
+
+  db:
+    image: mysql/mysql-server
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
+    container_name: db              
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_USER=lzl
+    volumes:
+      - C:/Users/Luo/source/repos/Api/Api/MySql-InitScript:/docker-entrypoint-initdb.d/
+  web:
+    build: . 
+    container_name: "aspnetcoreapi"
+    ports:
+      - "8004:3827"
+    depends_on:
+      - db
