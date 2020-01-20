@@ -1,6 +1,5 @@
 ﻿version: "3"
 services:
-  
   #mysql容器配置
   db:
     image: mysql/mysql-server  #使用镜像
@@ -20,7 +19,16 @@ services:
   web:
     build: .  #利用web应用的dockerfile来构建容器。 .为dockerfile所在的目录 
     container_name: "aspnetcoreapi"  #容器名
-    ports:
-      - "8004:3827"
+    #ports:
+    #  - "8004:3827"  #加入nginx后不需要再此处指定web的访问端口
     depends_on:  #web应用依赖于mysql容器，此处设置让mysql容器先启动，再让web容器再启动。(注意：并不会等待mysql容器完全启动)
       - db
+  reverse-proxy:
+    container_name: api.proxy
+    image: nginx
+    depends_on:
+      - web
+    ports:
+      - "9090:8080"
+    volumes:
+      - ./proxy.conf:/etc/nginx/conf.d/default.conf
