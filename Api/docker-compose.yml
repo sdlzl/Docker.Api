@@ -1,10 +1,11 @@
 ﻿version: "3"
 services:
-
+  
+  #mysql容器配置
   db:
-    image: mysql/mysql-server
-    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
-    container_name: db              
+    image: mysql/mysql-server  #使用镜像
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci  #相当于dockerfile中my.cnf中的配置，要以mysqld开头，否则不会生效
+    container_name: db  #mysql容器名称 此处很关键，要与Web应用中连接字符串server保持一致(上面的db是只是services的名称)             
     restart: always
     ports:
       - "3306:3306"
@@ -12,23 +13,14 @@ services:
       - MYSQL_PASSWORD=password
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_USER=lzl
-    volumes:
-      - ./ApiMySql-InitScript:/docker-entrypoint-initdb.d/
-
+    volumes:  #数据库初始化sql脚本目录映射  本机目录:容器目录(按照官方的来) mysql启动的时候执行该脚本
+      - ./MySql-InitScript:/docker-entrypoint-initdb.d/
+      
+  #web应用配置
   web:
-    build: . 
-    container_name: "aspnetcoreapi"
-    depends_on:
-      - db
-
-  reverse-proxy:
-    container_name: api.proxy
-    image: nginx
-    depends_on:
-      - web
+    build: .  #利用web应用的dockerfile来构建容器。 .为dockerfile所在的目录 
+    container_name: "aspnetcoreapi"  #容器名
     ports:
-      - "9090:8080"
-    volumes:
-      - ./proxy.conf:/etc/nginx/conf.d/default.conf
-    links:
-      - web
+      - "8004:3827"
+    depends_on:  #web应用依赖于mysql容器，此处设置让mysql容器先启动，再让web容器再启动。(注意：并不会等待mysql容器完全启动)
+      - db

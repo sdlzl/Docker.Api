@@ -51,3 +51,4 @@ D:\study\docker\code-list\Api\Api\obj\Debug\netcoreapp3.0\Api.RazorTargetAssembl
 D:\study\docker\code-list\Api\Api\obj\Debug\netcoreapp3.0\Api.csproj.CopyComplete
 D:\study\docker\code-list\Api\Api\obj\Debug\netcoreapp3.0\Api.dll
 D:\study\docker\code-list\Api\Api\obj\Debug\netcoreapp3.0\Api.pdb
+D:\study\docker\code-list\Api\Api\obj\Debug\netcoreapp3.0\Api.csprojAssemblyReference.cache
